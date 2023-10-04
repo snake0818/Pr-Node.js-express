@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<head>
+    <title><%- title %></title>
+    <%- include('./partials/head_libs.ejs') %>
+        <script>
+            //  速率轉換服務
+            function po(num = $('#num1').val()) {
+                let unit = $('#speedlist').val();
+                let unit2 = $('#speedlist2').val();
+                if (num == '') { $('#result').val('輸入不可為空!!'); return; }
+                // 呼叫REST API服務
+                $.post(`/speedTransform/${num}/${unit}/${unit2}`, (data) => { $('#result').val(data.result); });
+            }
+            $(function () {
+                //  更改所求的單位後執行速率轉換服務
+                $('.form-select').change(() => { po(); });
+                //  清除功能
+                $('#btn0').click(() => { $('input').val(''); });
+            })
+        </script>
+</head>
+
+<body>
+    <%- include('./partials/navbar.ejs') %>
+        <div class="container text-center">
+            <h1 class="my-5"><span class="badge bg-danger"><%- title %>服務</span></h1>
+            <table class="fs-4 mx-auto mb-3">
+                <tr>
+                    <th><b class="me-2">輸入</b></th>
+                    <td><input type="number" id="num1" step=".1" min="0"></td>
+                    <td>
+                        <select name="speedlist" id="speedlist" class="form-select">
+                            <option value="ms">公尺每秒(m/s)</option>
+                            <option value="kmh">公里每小時(km/h)</option>
+                            <option value="mph">英里每小時(mph)</option>
+                            <option value="knots">節(knots)每小時1海里</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><b class="me-2">結果</b></th>
+                    <td><input type="text" id="result" disabled placeholder="請輸入數字!"></td>
+                    <td>
+                        <select name="speedlist" id="speedlist2" class="form-select">
+                            <option value="ms">公尺每秒(m/s)</option>
+                            <option value="kmh">公里每小時(km/h)</option>
+                            <option value="mph">英里每小時(mph)</option>
+                            <option value="knots">節(knots)每小時1海里</option>
+                            <option value="c">光速(c)</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <button id="btn0" class="btn btn-success btn-md"><b>清除</b></button>
+        </div>
+</body>
+<script>
+    //  取得輸入欄位,建立事件監聽器,每次輸入將執行速率轉換服務
+    document.querySelector("input#num1").addEventListener("input", (e) => { po(e.target.value); });
+</script>
+
+</html>

@@ -1,0 +1,22 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #f9eed3;
+    font-family: 標楷體;
+}
+
+.container h1{
+    color: #fff;
+}
+
+table tr td small{
+    font-size: 22px;
+}
+.form-select{
+    border: 1px solid;
+}
+input[disabled]{
+    border: 1px solid;
+    text-align: center;
+    color: #000;
+}

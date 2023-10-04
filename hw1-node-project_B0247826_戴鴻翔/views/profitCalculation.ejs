@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<head>
+    <title><%- title %></title>
+    <%- include('./partials/head_libs.ejs') %>
+        <script>
+            //  獲利計算服務
+            function po() {
+                let num1 = $('#num1').val();
+                let num2 = $('#num2').val();
+                let n1 = $('#n1').val();
+                let n2 = $('#n2').val();
+                let p1 = $('#p1').val();
+                let p2 = $('#p2').val();
+                // 利用ajax呼叫REST API服務
+                $.ajax({
+                    url: "/profitCalculation",
+                    method: "POST",
+                    data: { num1, num2, n1, n2, p1, p2 },
+                    dataType: "JSON",
+                    success: (data) => {
+                        $('#result0').val(data.r1);
+                        $('#result1').val(data.r2);
+                        $('#result2').val(data.r3);
+                        $('#result3').val(data.r4);
+                    }
+                })
+            }
+            $(function () {
+                //  更改手續折扣後執行獲利計算服務
+                $('#p1', '#p2').change(() => { po(); });
+                $('#btn1').click(() => { po(); });
+            })
+        </script>
+</head>
+
+<body>
+    <%- include('./partials/navbar.ejs') %>
+        <div class="container text-center mt-5">
+            <h1 class="mb-2"><span class="badge bg-danger"><%- title %>服務</span></h1>
+            <table class="fs-4 mx-auto mb-3">
+                <tr>
+                    <th>買入</th>
+                    <th>賣出</th>
+                </tr>
+                <tr>
+                    <td>
+                        <small>請輸入買入的個股成交價</small><br>
+                        <input type="number" id="num1" value="50">
+                    </td>
+                    <td>
+                        <small>請輸入賣出的個股成交價</small><br>
+                        <input type="number" id="num2" value="60">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <small>輸入購買股數(一張為1000股)</small><br>
+                        <input type="number" id="n1" value="1000" step="1000">
+                    </td>
+                    <td>
+                        <small>輸入賣出股數(一張為1000股)</small><br>
+                        <input type="number" id="n2" value="1000" step="1000">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <small>券商手續費折扣</small><br>
+                        <select id="p1" class="form-select">
+                            <option selected="selected" value="1">沒折扣</option>
+                            <option value="0.95">95折</option>
+                            <option value="0.9">9折</option>
+                            <option value="0.85">85折</option>
+                            <option value="0.8">8折</option>
+                            <option value="0.75">75折</option>
+                            <option value="0.7">7折</option>
+                            <option value="0.65">65折</option>
+                            <option value="0.6">6折</option>
+                            <option value="0.55">55折</option>
+                            <option value="0.5">5折</option>
+                            <option value="0.45">45折</option>
+                            <option value="0.4">4折</option>
+                            <option value="0.35">35折</option>
+                            <option value="0.3">3折</option>
+                            <option value="0.28">28折</option>
+                            <option value="0.25">25折</option>
+                            <option value="0.2">2折</option>
+                            <option value="0.15">15折</option>
+                            <option value="0.1">1折</option>
+                            <option value="0.05">0.5折</option>
+                            <option value="0">免手續費</option>
+                        </select>
+                    </td>
+                    <td>
+                        <small>券商手續費折扣</small><br>
+                        <select id="p2" class="form-select">
+                            <option selected="selected" value="1">沒折扣</option>
+                            <option value="0.95">95折</option>
+                            <option value="0.9">9折</option>
+                            <option value="0.85">85折</option>
+                            <option value="0.8">8折</option>
+                            <option value="0.75">75折</option>
+                            <option value="0.7">7折</option>
+                            <option value="0.65">65折</option>
+                            <option value="0.6">6折</option>
+                            <option value="0.55">55折</option>
+                            <option value="0.5">5折</option>
+                            <option value="0.45">45折</option>
+                            <option value="0.4">4折</option>
+                            <option value="0.35">35折</option>
+                            <option value="0.3">3折</option>
+                            <option value="0.28">28折</option>
+                            <option value="0.25">25折</option>
+                            <option value="0.2">2折</option>
+                            <option value="0.15">15折</option>
+                            <option value="0.1">1折</option>
+                            <option value="0.05">0.5折</option>
+                            <option value="0">免手續費</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <small>買入成本</small><br>
+                        <input type="number" id="result0" disabled style="color: red;">
+                    </td>
+                    <td>
+                        <small>賣出收益</small><br>
+                        <input type="number" id="result1" disabled style="color: green;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <small>獲利</small><br>
+                        <input type="number" id="result2" disabled>
+                    </td>
+                    <td>
+                        <small>獲利率</small><br>
+                        <input type="text" id="result3" disabled>
+                    </td>
+                </tr>
+                <b><small>※此處計算的手續費以0.1425%,證交稅0.3%為基準</small></b>
+            </table>
+            <button id="btn1" class="btn btn-success btn-md"><b>計算</b></button> <br /> <br />
+        </div>
+</body>
+
+</html>
