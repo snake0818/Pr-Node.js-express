@@ -1,23 +1,31 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- 表示本頁面是由 HTML5 編成-->
+<html>
 
 <head>
+    <!-- 設定網頁之標題 -->
     <title><%- title %></title>
+    <!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
     <%- include('./partials/head_libs.ejs') %>
+        <!-- 以下這個匿名函數是jquery的ready事件處理方法，當網頁Ready好的就會自動執行 -->
+        <!-- 因此，可以把要註冊的所有事件處理函數及需要先執行的命令放在這個函數內 -->
         <script>
-            //  速率轉換服務
-            function po(num = $('#num1').val()) {
-                let unit = $('#speedlist').val();
-                let unit2 = $('#speedlist2').val();
-                if (num == '') { $('#result').val('輸入不可為空!!'); return; }
-                // 呼叫REST API服務
-                $.post(`/speedTransform/${num}/${unit}/${unit2}`, (data) => { $('#result').val(data.result); });
-            }
             $(function () {
-                //  更改所求的單位後執行速率轉換服務
+                //  更改單位後執行速率轉換服務
                 $('.form-select').change(() => { po(); });
                 //  清除功能
                 $('#btn0').click(() => { $('input').val(''); });
             })
+            //  速率轉換服務
+            //  如果在呼叫這個函式時未提供函式引數，則使用 "num1" 元素的值作為預設值
+            function po(num = $('#num1').val()) {
+                //  取得id為unit、unit2的值
+                let unit = $('#speedlist').val();
+                let unit2 = $('#speedlist2').val();
+                // 如果使用者沒有輸入num1，則顯示警告訊息
+                if (num == '') { $('#result').val('輸入不可為空!!'); return; }
+                // 呼叫REST API服務
+                $.post(`/speedTransform/${num}/${unit}/${unit2}`, (data) => { $('#result').val(data.result); });
+            }
         </script>
 </head>
 
@@ -56,7 +64,9 @@
         </div>
 </body>
 <script>
-    //  取得輸入欄位,建立事件監聽器,每次輸入將執行速率轉換服務
+    //  取得輸入欄位
+    //  建立事件監聽器
+    //  每個輸入變化都將執行速率轉換服務
     document.querySelector("input#num1").addEventListener("input", (e) => { po(e.target.value); });
 </script>
 

@@ -1,11 +1,22 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- 表示本頁面是由 HTML5 編成-->
+<html>
 
 <head>
+    <!-- 設定網頁之標題 -->
     <title><%- title %></title>
+    <!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
     <%- include('./partials/head_libs.ejs') %>
+        <!-- 以下這個匿名函數是jquery的ready事件處理方法，當網頁Ready好的就會自動執行 -->
+        <!-- 因此，可以把要註冊的所有事件處理函數及需要先執行的命令放在這個函數內 -->
         <script>
+            $(function () {
+                //  更改手續折扣後執行獲利計算服務
+                $('#p1', '#p2').change(() => { po(); });
+                $('#btn1').click(() => { po(); });
+            })
             //  獲利計算服務
             function po() {
+                //  取得參數
                 let num1 = $('#num1').val();
                 let num2 = $('#num2').val();
                 let n1 = $('#n1').val();
@@ -26,11 +37,6 @@
                     }
                 })
             }
-            $(function () {
-                //  更改手續折扣後執行獲利計算服務
-                $('#p1', '#p2').change(() => { po(); });
-                $('#btn1').click(() => { po(); });
-            })
         </script>
 </head>
 
