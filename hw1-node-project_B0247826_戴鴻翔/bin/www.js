@@ -4,8 +4,8 @@ const app = require('../app'); // 引用app.js模組 (app.js了匯出app物件)
 const debug = require('debug')('node-mathbmi:server');
 const http = require('http');
 
-// 設定連接埠port由環境變數PORT決定或預設使用3001
-let port = normalizePort(process.env.PORT || '3001');
+// 設定連接埠port由環境變數PORT決定或預設使用3000
+let port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 // 建立http伺服器，並使用express物件app來處理請求
@@ -71,4 +71,4 @@ function onListening() {
 // 取得並列出Server端的ip，需在專案中安裝underscore模組: npm install underscore --save
 const sip = require('underscore').chain(require('os').networkInterfaces()).values()
     .flatten().find({family: 'IPv4', internal: false}).value().address;
-console.log('Server IP='+sip);
+console.log(`Server IP= ${sip}:${port}`);
