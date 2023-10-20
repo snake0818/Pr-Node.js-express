@@ -6,17 +6,17 @@ const router = express.Router();
 //************ 根據Client端利用GET送來之不同路由，回傳相對應的網頁 ************
 // 回傳給Client端首頁及該網頁之標題
 router.get('/', (req, res) => {
-	res.render('index.ejs', { title: "專案首頁" });
+	res.render('index', { title: "專案首頁" });
 });
-router.get('/speedTransform', (req, res) => {
-	res.render('speedTransform.ejs', { title: "速率轉換" });
+router.get('/speedConversion', (req, res) => {
+	res.render('speedConversion', { title: "速率轉換" });
 });
 router.get('/profitCalculation', (req, res) => {
-	res.render('profitCalculation.ejs', { title: "獲利計算" });
+	res.render('profitCalculation', { title: "獲利計算" });
 });
 
 //** 速率轉換服務 */
-router.post('/speedTransform/:num/:unit1/:unit2', (req, res) => {
+router.post('/speedConversion/:num/:unit1/:unit2', (req, res) => {
 	var num = req.params.num;
 	let unit1 = req.params.unit1;
 	let unit2 = req.params.unit2;

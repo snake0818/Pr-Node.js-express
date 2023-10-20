@@ -24,7 +24,7 @@
                 // 如果使用者沒有輸入num1，則顯示警告訊息
                 if (num == '') { $('#result').val('輸入不可為空!!'); return; }
                 // 呼叫REST API服務
-                $.post(`/speedTransform/${num}/${unit}/${unit2}`, (data) => { $('#result').val(data.result); });
+                $.post(`/speedConversion/${num}/${unit}/${unit2}`, (data) => { $('#result').val(data.result); });
             }
         </script>
 </head>
