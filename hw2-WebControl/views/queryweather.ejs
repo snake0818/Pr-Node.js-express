@@ -1,0 +1,153 @@
+<!DOCTYPE html> 
+<html> 
+<!-- head為網頁的表頭，通常將CSS、引用bootstrap、jquery等meta data，以及javascript函數放在表頭內 -->
+<head>
+	<!-- 設定網頁之標題 -->
+	<title><%= title %></title>
+	<!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
+	<%- include('./partials/head.ejs'); %>
+
+	<!-- 以下這個匿名函數是jquery的ready事件處理方法，當網頁Ready好的就會自動執行 -->
+	<!-- 因此，可以把要註冊的所有事件處理函數及需要先執行的命令放在這個函數內 -->
+	<script>
+		$(function(){
+		    // 幫id為btn1的按鈕標籤註冊了點擊事件的處理方法 
+			$('#btn1').click(function(){
+				$.post(
+					'/queryweather/' + $('#selectedcity').val(),
+					function(data){
+						$('#temp').val("攝氏" + data.temperature +"度");
+					  $('#humid').val(data.humidity + " %");
+						$('#condition').val(data.condition);
+						$('#time').val(data.time);
+						
+						var hightemps = new Array();
+						var lowtemps = new Array();
+						for (i=0; i< data.hightemps.length; i++)
+						{
+							hightemps[i] = Number(data.hightemps[i]);
+							lowtemps[i] = Number(data.lowtemps[i]);
+						}
+						plotcharts(hightemps, lowtemps);
+			
+					}
+				);
+			});
+			
+			// 幫id為btnhome的按鈕標籤註冊了點擊事件的處理方法 
+			$('#btnhome').click(function(){ window.location.href = '/'; });
+			
+			function plotcharts(htemps, ltemps)
+			{
+				// 繪製Highcharts圖測試
+				Highcharts.chart('container', {
+					chart: {
+						type: 'line'
+					},
+					legend: {
+						itemStyle: {
+							font: '16pt 標楷體',
+							color: '#222'
+						},
+						itemHoverStyle: {
+							color: 'red'
+						},
+						itemHiddenStyle: {
+							color: '#444'
+						}
+					},
+					title: {
+						text: '未來7天天氣預報',
+						style: {color:'red', fontSize: '16px', fontFamily: '標楷體'}
+					},
+					subtitle: {
+						text: '資料來源：台灣中央氣象署氣象開放資料API',
+						style: {color:'red', fontSize: '12px', fontFamily: '標楷體'}
+					},
+					xAxis: {
+						categories: ['第0.5天','第1天','第1.5天','第2天','第2.5天','第3天','第3.5天','第4天','第4.5天','第5天','第5.5天','第6天','第6.5天','第7天'],
+						labels: {
+							style: {color:'green', fontSize: '14px', fontFamily: '標楷體'}
+						}
+					},
+					yAxis: {
+						title: {
+							text: '溫度(°C)',
+							style: {color:'blue', fontSize: '16px', fontFamily: '標楷體'}
+						}
+					},
+					plotOptions: {
+						line: {
+							dataLabels: {
+								enabled: true
+							},
+							enableMouseTracking: true
+						}
+					},
+					series: [{
+						name: '高溫',
+						style: {fontSize: '10px', fontFamily: '標楷體'},
+						data: htemps
+					}, {
+						name: '低溫',
+						style: {fontSize: '10px', fontFamily: '標楷體'},
+						data: ltemps
+					}]
+				});
+			}
+
+			//		
+		})
+	</script>
+</head>
+
+<!-- body為網頁的內容，也就是呈現使用者介面UI的地方 -->
+<body style="font-family:標楷體;">
+	<!-- 包含產生導覽列所需的標頭檔 -->
+	<%- include('./partials/header.ejs'); %>
+	
+	<!-- 以下為操作介面UI之設計 -->
+	<div  class="container mt-5" style="text-align:center;">
+	<br/>
+	<!-- 操作介面之標題 -->
+	<h4 class="bg-primary text-white rounded fw-bold">臺灣各縣市未來1週每12小時之天氣預報(使用中央氣象署氣象開放資料API)</h4>
+
+	<!-- 操作介面之內容 -->
+	<label for="selectedcity" class="text-primary">選擇城市:</label>
+	<select id="selectedcity">
+		<option value="臺北市" selected>臺北市</option>
+		<option value="基隆市">基隆市</option>
+		<option value="新北市">新北市</option>
+		<option value="桃園市">桃園市</option>
+		<option value="新竹縣">新竹縣</option>
+		<option value="新竹市">新竹市</option>
+		<option value="苗栗縣">苗栗縣</option>
+		<option value="臺中市">臺中市</option>
+		<option value="彰化縣">彰化縣</option>
+		<option value="南投縣">南投縣</option>
+		<option value="雲林縣">雲林縣</option>
+		<option value="嘉義縣">嘉義縣</option>
+		<option value="嘉義市">嘉義市</option>
+		<option value="臺南市">臺南市</option>
+		<option value="高雄市">高雄市</option>
+		<option value="臺東縣">臺東縣</option>
+		<option value="花蓮縣">花蓮縣</option>
+		<option value="宜蘭縣">宜蘭縣</option>
+		<option value="澎湖縣">澎湖縣</option>
+		<option value="金門縣">金門縣</option>
+		<option value="連江縣">連江縣</option>
+	</select> <br>
+	<b class="text-primary">平均溫度:</b> <input type="text" id="temp"> <br>
+	<b class="text-primary">相對濕度:</b> <input type="text" id="humid"> <br>
+	<b class="text-primary">更新時間:</b> <input type="text" id="time"> <br>
+	<b class="text-primary">天氣狀況:</b> <br>
+	<textarea id="condition" rows=2 cols=60></textarea> <br>
+	<button id="btn1" class="btn btn-success btn-sm">查詢天氣</button> <br>
+	<div id="container" style="min-width: 310px; height: 220px; margin: 0 auto"></div>
+	
+	<!-- 回首頁按鈕 -->
+	<button id="btnhome" class="btn btn-info btn-sm fw-bold">回首頁</button>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html> <!-- 表示本頁面是由 HTML5 編成-->
+<html> 
+<!-- head為網頁的表頭，通常將CSS、引用bootstrap、jquery等meta data，以及javascript函數放在表頭內 -->
+<head>
+	<!-- 設定網頁之標題 -->
+	<title><%= title %></title>
+	<!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
+	<%- include('./partials/head.ejs'); %>
+
+	<!-- 以下這個匿名函數是jquery的ready事件處理方法，當網頁Ready好的就會自動執行 -->
+	<!-- 因此，可以把要註冊的所有事件處理函數及需要先執行的命令放在這個函數內 -->
+	<script>
+		$(function(){
+		    // 幫id為btn1的按鈕標籤註冊了點擊事件的處理方法 (分析照片)
+			$('#btn1').click(function(){
+				let imgfile = document.getElementById('u_img_file'); // 取得影像檔名稱之<input>標籤
+				if (!/.(gif|jpg|jpeg|png|GIF|JPG|PNG|JPEG)$/.test(imgfile.value)) {
+					alert("圖片類型不正確!");
+					return;
+				}
+				let formData = new FormData();
+				formData.append('file', imgfile.files[0]);
+				console.log(imgfile.files[0]);
+				let url = "/upload-analyze-image";
+				$.ajax({
+					url: url,
+					type: "POST",
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						if (data.status == 0) {
+							var str = "<font color=red><b>圖片分析結果如下：</b> </font> <br>" 
+							str = str + "<font color=blue><b>(1)分類(Categories): " + JSON.stringify(data.result.categories) + "</b> </font> <br>";
+							str = str + "<font color=Maroon><b>(2)描述(Description): " + JSON.stringify(data.result.description) + "</b> </font> <br>";
+							str = str + "<font color=Maroon><b>(3)物件(Objects): " + JSON.stringify(data.result.objects) + "</b> </font> <br>";
+							str = str + "<font color=Purple><b>(4)臉孔(Faces): " + JSON.stringify(data.result.faces) + "</b> </font>";												
+							$("#result").html(str);		
+						}
+					},
+					error: function (err) {
+						console.log(err);
+					}
+				});
+			});
+
+			 // 幫id為btn2的按鈕標籤註冊了點擊事件的處理方法 (分析照片)
+			 $('#btn2').click(function(){
+				let imgfile = document.getElementById('u_img_file'); // 取得影像檔名稱之<input>標籤
+				if (!/.(gif|jpg|jpeg|png|GIF|JPG|PNG|JPEG)$/.test(imgfile.value)) {
+					alert("圖片類型不正確!");
+					return;
+				}
+				let formData = new FormData();
+				formData.append('file', imgfile.files[0]);
+				console.log("imgfile.files[0]: " + imgfile.files[0]);
+				let url = "/upload-ocr-image";
+				$.ajax({
+					url: url,
+					type: "POST",
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						if (data.status == 0) {
+							var str = "<font color=red><b>光學字符識別(OCR)結果如下：</b> </font> <br>" 
+							str = str + "<font color=blue><b> " + JSON.stringify(data.result) + "</b> </font>";									
+							$("#result").html(str);		
+						}
+					},
+					error: function (err) {
+						console.log(err);
+					}
+				});
+			});
+
+			// 幫id為btnhome的按鈕標籤註冊了點擊事件的處理方法 
+			$('#btnhome').click(function(){
+				window.location.href = '/';	
+			});
+
+			// 修改預覽圖示
+			$("#u_img_file").change(function () {
+				readURL(this);
+			});
+
+		});
+
+        // 將讀取的影像檔結果當成URL，並指定給img的src屬性，將影像檔顯示於網頁上
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#u_img").attr('src', e.target.result);
+				}
+                reader.readAsDataURL(input.files[0]);
+            }
+		}
+		
+	</script>
+</head>
+
+<!-- body為網頁的內容，也就是呈現使用者介面UI的地方 -->
+<body style="font-family:標楷體;">
+<!-- 包含產生導覽列所需的標頭檔 -->
+<%- include('./partials/header.ejs'); %>
+
+<!-- 以下為操作介面UI之設計 -->
+<div  class="container mt-5" style="text-align:center;">
+	<br/>
+	<!-- 操作介面之標題 -->
+	<h2 class="bg-primary text-white fw-bold">上傳與辨識圖片操作網頁(呼叫Azure Computer Vision API)></h2>
+	
+	<!-- 操作介面之內容 -->
+	<!-- 設定照片高度為200px，寬度根據照片大小等比率自動調整(auto)-->
+	<img src="./images/user.png" class="u_img" id="u_img" height="190" width="auto" > <br>
+
+	<div>  <!-- 讓使用者選取照片檔案 -->
+		<input id="u_img_file" type="file" name="file" style="margin:0px auto; display:block;">
+	</div>
+
+	<button id="btn1" class="btn btn-success btn-sm">分析圖片</button> <span>&nbsp</span>
+	<button id="btn2" class="btn btn-success btn-sm">執行光學字符識別(OCR)</button>  <br> <br>
+	<button id="btnhome" class="btn btn-info btn-sm">回首頁</button> <br>
+	<!-- 可編輯之div區 -->
+	<div contenteditable="true" id = "result" style="text-align: center;"></div>
+</div>
+</div>
+</body>
+</html>
