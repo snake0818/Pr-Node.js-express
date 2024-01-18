@@ -1,0 +1,51 @@
+<!DOCTYPE html>  <!-- 表示本頁面是由 HTML5 編成-->
+<html> 
+<!-- head為網頁的表頭，通常將CSS、引用bootstrap、jquery等meta data，以及javascript函數放在表頭內 -->
+<head>
+	<!-- 設定網頁之標題 -->
+	<title><%= title %></title>
+	<!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
+	<%- include('./partials/head.ejs'); %>
+
+	<!-- 以下這個匿名函數是jquery的ready事件處理方法，當網頁Ready好的就會自動執行 -->
+	<!-- 因此，可以把要註冊的所有事件處理函數及需要先執行的命令放在這個函數內 -->
+	<script>
+    $(function () {
+      // 幫id為btnhome的按鈕標籤註冊了點擊事件的處理方法，導覽到[專案首頁] 
+      $('#btnhome').click(function () { window.location.href = '/'; });
+      // 幫id為btn1的按鈕標籤註冊了點擊事件的處理方法，導覽到[Web監控LED燈操作網頁]  
+      $('#btn1').click(function () { window.location.href = '/webcontrol'; });
+			// 幫id為btn2的按鈕標籤註冊了點擊事件的處理方法，導覽到[影像辨識操作網頁]  
+			$('#btn2').click(function(){ window.location.href = '/image-recognition'; });
+      // 幫id為btn3的按鈕標籤註冊了點擊事件的處理方法，導覽到[查詢天氣操作網頁]  
+			$('#btn3').click(function(){ window.location.href = '/queryweather'; });
+      // 幫id為btn4的按鈕標籤註冊了點擊事件的處理方法，導覽到[天氣資訊網頁]  
+			$('#btn4').click(function(){ window.location.href = '/weather'; });
+    })
+  </script>
+</head>
+
+<!-- body為網頁的內容，也就是呈現使用者介面UI的地方 -->
+<body style="font-family: 'Times New Roman',標楷體;">
+<!-- 包含產生導覽列所需的標頭檔 -->
+<%- include('./partials/header.ejs'); %>
+
+<!-- 以下為操作介面UI之設計 -->
+<div  class="container mt-5" style="text-align:center;">
+	<br/>
+	<!-- 操作介面之標題 -->
+	<h1 class="bg-primary text-white rounded fw-bold">專案首頁</h1>	
+
+	<!-- 操作介面之內容 -->
+	<div>
+		<button id="btn1" class="btn btn-success btn-md fw-bold">Web監控</button>
+		<button id="btn2" class="btn btn-success btn-md fw-bold">上傳與辨識圖片</button>
+		<button id="btn3" class="btn btn-success btn-md fw-bold">天氣預測</button>
+		<button id="btn4" class="btn btn-success btn-md fw-bold">天氣資訊</button>
+	</div>
+
+	<!-- 回首頁之按鈕 -->
+	<button id="btnhome" class="btn btn-info btn-sm fw-bold mt-5">回首頁</button>	
+</div>
+</body>
+</html>
